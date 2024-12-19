@@ -6,11 +6,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"pretty", "html:target/cucumber-reports"},
-        stepNotifications = true,
-        features = "src/test/resources/features",
-        glue = "com.nttdata.steps"//{"com.nttdata.steps", "com.nttdata.stepsdefinitions"} // Incluye los hooks aquí
-        //tags = "@test"
+        plugin = {"pretty", "html:target/cucumber-reports"},  // Generar reporte HTML
+        stepNotifications = true,  // Activar notificaciones para los pasos
+        features = "src/test/resources/features",  // Ruta donde se encuentran los archivos .feature
+        glue = "com.nttdata.steps"  // Ruta donde se encuentran los archivos de pasos y definiciones
+         //tags = "@test"
 )
 public class RunnerTest {
 }
+

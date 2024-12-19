@@ -14,6 +14,7 @@ public class WebDriverManager {
     private static WebDriver driver;
     private static Scenario scenario;
 
+    // Devuelve el WebDriver, creando uno si es necesario
     public static WebDriver getDriver() {
         if (driver == null) {
             initializeDriver();
@@ -21,6 +22,7 @@ public class WebDriverManager {
         return driver;
     }
 
+    // Inicializa el WebDriver con las configuraciones necesarias
     private static void initializeDriver() {
         // Configuración de WebDriver y propiedades
         System.setProperty("webdriver.http.factory", "jdk-http-client");
@@ -32,31 +34,32 @@ public class WebDriverManager {
         driver.manage().window().maximize();
     }
 
+    // Configura el WebDriver antes de cada escenario
     @Before(order = 0)
     public void setUp() {
-        // Inicialización automática antes de cada escenario
-        getDriver();
+        getDriver(); // Inicializa el driver antes de cada escenario
     }
 
+    // Asocia el escenario actual antes de la ejecución
     @Before(order = 1)
     public void setScenario(Scenario scenario) {
         WebDriverManager.scenario = scenario;
     }
 
+    // Cierra el WebDriver después de cada escenario
     @After
     public void tearDown() {
-        // Cierre del driver al finalizar el escenario
         if (driver != null) {
-            driver.quit();
-            driver = null; // Para evitar reutilización en el siguiente escenario
+            driver.quit(); // Cierra el navegador
+            driver = null; // Evita la reutilización del driver en el siguiente escenario
         }
     }
 
+    // Captura una captura de pantalla durante la ejecución
     public static void captureScreenshot() {
-        // Adjuntar captura de pantalla al reporte
         if (scenario != null && driver != null) {
             byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            scenario.attach(screenshot, "image/png", "Evidencia");
+            scenario.attach(screenshot, "image/png", "Evidencia"); // Adjunta la captura al reporte
         }
     }
 }

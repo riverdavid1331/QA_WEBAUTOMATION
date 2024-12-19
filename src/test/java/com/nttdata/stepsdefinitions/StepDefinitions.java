@@ -30,6 +30,9 @@ public class StepDefinitions {
     @Before
     public void setup() {
         driver = getDriver();
+        loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
+        cartPage = new CartPage(driver);
     }
 
     @After
@@ -38,6 +41,7 @@ public class StepDefinitions {
     }
 
     private void closeDriver() {
+        driver.quit();
     }
 
     @Dado("que me encuentro en la página de login de la tienda")
@@ -54,14 +58,12 @@ public class StepDefinitions {
 
     @Cuando("inicio sesión con el usuario {string} y la contraseña {string}")
     public void inicioSesionConCredenciales(String usuario, String clave) {
-        loginPage = new LoginPage(driver);
         loginPage.login(usuario, clave);
         captureScreenshot();
     }
 
     @Entonces("debería ver el título {string} en la página principal")
     public void validoTituloEnLaPaginaPrincipal(String tituloEsperado) {
-        homePage = new HomePage(driver);
         String tituloActual = driver.getTitle();
         Assertions.assertTrue(tituloActual.contains(tituloEsperado),
                 "El título no coincide. Esperado: " + tituloEsperado + ", Actual: " + tituloActual);
@@ -70,7 +72,6 @@ public class StepDefinitions {
 
     @Y("valido que al menos exista un producto en el carrito")
     public void validoProductoEnElCarrito() {
-        cartPage = new CartPage(driver);
         WebElement popup = driver.findElement(By.id("product-confirmation-popup"));
         Assertions.assertTrue(popup.isDisplayed(), "No se encontró el popup de confirmación del producto.");
         captureScreenshot();
@@ -78,15 +79,14 @@ public class StepDefinitions {
 
     @Cuando("navego a la categoría {string} y subcategoría {string}")
     public void navegoACategoriaYSubcategoria(String categoria, String subcategoria) {
-        homePage = new HomePage(driver);
         homePage.navigateToCategory();
         captureScreenshot();
     }
 
     @Entonces("valido que el monto total sea calculado correctamente")
     public void validoMontoTotalCalculadoCorrectamente() {
-        cartPage = new CartPage(driver);
         cartPage.verifyTotalAmount();
         captureScreenshot();
     }
 }
+
